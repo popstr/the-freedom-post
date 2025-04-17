@@ -1,5 +1,6 @@
 "use client"
 import CMSPage from "@/app/components/cms-page";
+import Deadline from '@/app/components/deadline-picker';
 import { ContentItem, STATUS_TYPES } from "@/app/model/content-item";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,7 +13,7 @@ export default function NewContent() {
         type: "Article",
         status: STATUS_TYPES.DRAFT,
         authors: [],
-        deadline: new Date()
+        deadline: new Date().toISOString()
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -84,16 +85,7 @@ export default function NewContent() {
                     </div>
 
                     <div>
-                        <label htmlFor="deadline" className="block text-sm font-medium text-gray-700 mb-1">
-                            Deadline
-                        </label>
-                        <input
-                            type="date"
-                            id="deadline"
-                            value={formData.deadline ? new Date(formData.deadline).toISOString().split('T')[0] : ''}
-                            onChange={(e) => setFormData({ ...formData, deadline: new Date(e.target.value) })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        />
+                        <Deadline value={formData.deadline ? new Date(formData.deadline) : null} onChange={(newDate: Date) => setFormData({ ...formData, deadline: newDate.toISOString() })} />
                     </div>
 
                     <div className="flex justify-end space-x-4">

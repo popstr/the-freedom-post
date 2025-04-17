@@ -67,7 +67,10 @@ export default function Home() {
                     {new Date(article.deadline).toLocaleDateString('da-DK', {
                       year: 'numeric',
                       month: 'long',
-                      day: 'numeric'
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false
                     })}
                   </time>
                 ) : (
