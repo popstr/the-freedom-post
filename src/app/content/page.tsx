@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import CMSPage from "../components/cms-page";
+import StatusSelector from "../components/status-selector";
 import { ContentItem, STATUS_TYPES, statusLabels, StatusType } from "../model/content-item";
 
 export default function Home() {
@@ -23,21 +24,8 @@ export default function Home() {
     <CMSPage pageTitle="Content">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-            {Object.entries(STATUS_TYPES).map(([_, value]) => (
-              <button
-                key={value}
-                onClick={() => setSelectedStatus(value)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  selectedStatus === value
-                    ? 'bg-white text-emerald-800 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                }`}
-              >
-                {statusLabels[value]}
-              </button>
-            ))}
-          </div>
+          <StatusSelector selectedStatus={selectedStatus} onChange={setSelectedStatus} />
+          
           <Link 
             href="/content/new"
             className="px-4 py-2 bg-emerald-800 text-white rounded-md hover:bg-emerald-600 transition-colors cursor-pointer"
