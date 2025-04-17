@@ -1,12 +1,12 @@
 export type ContentItem = {
-    id: string;
-    title: string;
-    status: StatusType;
-    authors: Author[];
-    deadline?: string | null;
-    type: string;
-    content: string;
-}
+  id: string;
+  title: string;
+  status: StatusType;
+  authors: string[]; // Author ID's
+  deadline?: string | null;
+  type: string;
+  content: string;
+};
 
 export type Author = {
     id: string;
