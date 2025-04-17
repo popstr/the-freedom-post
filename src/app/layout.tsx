@@ -33,7 +33,7 @@ export default function RootLayout({
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
             <header className="flex justify-between items-center py-6 border-b border-gray-200">
-              <Link href={`/`}>
+              <Link href={`/content`}>
                 <Image src="/logo.png" alt="The Freedom Post" width={220} height={120} />
               </Link>
               <div className="flex items-center gap-4">

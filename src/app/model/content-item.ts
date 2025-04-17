@@ -3,7 +3,7 @@ export type ContentItem = {
     title: string;
     status: StatusType;
     authors: Author[];
-    deadline: Date;
+    deadline?: string | null;
     type: string;
     content: string;
 }
