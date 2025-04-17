@@ -65,7 +65,7 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
                 <span
                   className={`px-2 py-1 text-xs font-medium rounded-full ${
                     article.status === STATUS_TYPES.PUBLISHED
-                      ? 'bg-green-100 text-green-800'
+                      ? 'bg-green-50 text-green-600'
                       : article.status === STATUS_TYPES.IN_REVIEW
                         ? 'bg-yellow-100 text-yellow-800'
                         : article.status === STATUS_TYPES.ARCHIVED
@@ -75,20 +75,23 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
                 >
                   {statusLabels[article.status as StatusType]}
                 </span>
-                {article.deadline && (
-                  <div className="mt-2 text-sm text-gray-500">
-                    <time dateTime={new Date(article.deadline).toISOString()}>
-                      {new Date(article.deadline).toLocaleDateString('da-DK', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false,
-                      })}
-                    </time>
-                  </div>
-                )}
+                {article.deadline &&
+                  article.status !== STATUS_TYPES.PUBLISHED &&
+                  article.status !== STATUS_TYPES.ARCHIVED && (
+                    <div className="mt-2 text-sm text-gray-500">
+                      <span className="font-medium">Deadline: </span>
+                      <time dateTime={new Date(article.deadline).toISOString()}>
+                        {new Date(article.deadline).toLocaleDateString('da-DK', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false,
+                        })}
+                      </time>
+                    </div>
+                  )}
               </div>
             </div>
           </Link>
