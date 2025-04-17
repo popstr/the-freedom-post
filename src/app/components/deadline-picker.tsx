@@ -8,7 +8,7 @@ dayjs.extend(utc);
 
 const TZ = 'Europe/Copenhagen';
 
-export default function Deadline({
+export default function DeadlinePicker({
   value,
   onChange,
 }: {
@@ -18,9 +18,7 @@ export default function Deadline({
   return (
     <>
       <label htmlFor="deadline" className="block text-sm font-medium text-gray-700 mb-1">
-        {value ? value.toISOString() : ''}
         Deadline
-        {value ? formatDate(value) : ''}
       </label>
       <input
         type="datetime-local"

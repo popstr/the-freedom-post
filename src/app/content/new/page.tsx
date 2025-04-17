@@ -1,7 +1,7 @@
 'use client';
 import AuthorsPicker from '@/app/components/authors-picker';
 import CMSPage from '@/app/components/cms-page';
-import Deadline from '@/app/components/deadline-picker';
+import DeadlinePicker from '@/app/components/deadline-picker';
 import { ContentItem, STATUS_TYPES } from '@/app/model/content-item';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -98,7 +98,7 @@ export default function NewContent() {
           </div>
 
           <div>
-            <Deadline
+            <DeadlinePicker
               value={formData.deadline ? new Date(formData.deadline) : null}
               onChange={(newDate: Date) =>
                 setFormData({ ...formData, deadline: newDate.toISOString() })

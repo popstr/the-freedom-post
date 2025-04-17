@@ -1,7 +1,7 @@
 'use client';
 import AuthorsPicker from '@/app/components/authors-picker';
 import CMSPage from '@/app/components/cms-page';
-import Deadline from '@/app/components/deadline-picker';
+import DeadlinePicker from '@/app/components/deadline-picker';
 import { ContentItem, STATUS_TYPES } from '@/app/model/content-item';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -149,7 +149,7 @@ export default function EditContent() {
             </div>
 
             <div>
-              <Deadline
+              <DeadlinePicker
                 value={article.deadline ? new Date(article.deadline) : null}
                 onChange={(newDate: Date) =>
                   setArticle({ ...article, deadline: newDate.toISOString() })
