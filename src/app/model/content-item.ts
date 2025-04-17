@@ -6,6 +6,7 @@ export type ContentItem = {
   deadline?: string | null;
   type: string;
   content: string;
+  createdBy: string; // User Id
 };
 
 export type Author = {

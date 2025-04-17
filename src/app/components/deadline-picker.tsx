@@ -8,13 +8,7 @@ dayjs.extend(utc);
 
 const TZ = 'Europe/Copenhagen';
 
-export default function DeadlinePicker({
-  value,
-  onChange,
-}: {
-  value: Date | null;
-  onChange: (newDate: Date) => void;
-}) {
+export default function DeadlinePicker({ value }: { value: Date | null }) {
   return (
     <>
       <label htmlFor="deadline" className="block text-sm font-medium text-gray-700 mb-1">
@@ -23,8 +17,8 @@ export default function DeadlinePicker({
       <input
         type="datetime-local"
         id="deadline"
-        value={value ? formatDate(value) : ''}
-        onChange={(e) => onChange(parseDate(e.target.value))}
+        name="deadline"
+        defaultValue={value ? formatDate(value) : ''}
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
       />
     </>
@@ -34,8 +28,4 @@ export default function DeadlinePicker({
 function formatDate(date: Date): string {
   // Return in the format expected by datetime-local input
   return dayjs(date).tz(TZ).format('YYYY-MM-DDTHH:mm');
-}
-
-function parseDate(dateString: string) {
-  return dayjs(dateString).toDate();
 }

@@ -1,111 +1,89 @@
-"use client"
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import CMSPage from "../components/cms-page";
-import StatusSelector from "../components/status-selector";
-import { Author, ContentItem, STATUS_TYPES, statusLabels, StatusType } from '../model/content-item';
+import Link from 'next/link';
+import CMSPage from '../components/cms-page';
+import StatusSelector from '../components/status-selector';
+import { ContentItem, STATUS_TYPES, statusLabels, StatusType } from '../model/content-item';
+import { getAuthors } from '../server/author';
+import { getArticles } from '../server/content-item';
 
-export default function Home() {
-  const [selectedStatus, setSelectedStatus] = useState<StatusType>(STATUS_TYPES.ALL);
-  const [articles, setArticles] = useState<ContentItem[]>([]);
-  const [authors, setAuthors] = useState<Author[]>([]);
+export default async function ContentPage({ searchParams }: { searchParams: { status?: string } }) {
+  const { status } = await searchParams;
+  const selectedStatus = status || STATUS_TYPES.ALL;
+  const articles = await getArticles(selectedStatus);
+  const authors = await getAuthors();
 
-  useEffect(() => {
-    fetch('http://localhost:3001/articles')
-      .then((response) => response.json())
-      .then((data) => setArticles(data));
-  }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/authors')
-      .then((response) => response.json())
-      .then((data) => setAuthors(data));
-  }, []);
-
-  // Filter articles based on selected status
-  const filteredArticles =
-    selectedStatus === STATUS_TYPES.ALL
-      ? articles
-      : articles.filter((article) => article.status === selectedStatus);
-
-  if (articles.length === 0 || authors.length === 0) {
-    return <div>Loading...</div>;
-  }
+  const filteredArticles = articles.filter((article: ContentItem) => {
+    if (selectedStatus === STATUS_TYPES.ALL) return true;
+    return article.status === selectedStatus;
+  });
 
   return (
     <CMSPage pageTitle="Content">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <StatusSelector selectedStatus={selectedStatus} onChange={setSelectedStatus} />
+      <div className="flex justify-end mb-6">
+        <Link
+          href="/content/new"
+          className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors"
+        >
+          Create new
+        </Link>
+      </div>
 
+      <div className="mb-6">
+        <StatusSelector selectedStatus={selectedStatus} />
+      </div>
+
+      <div className="grid gap-4">
+        {filteredArticles.map((article: ContentItem) => (
           <Link
-            href="/content/new"
-            className="px-4 py-2 bg-emerald-800 text-white rounded-md hover:bg-emerald-600 transition-colors cursor-pointer"
+            key={article.id}
+            href={`/content/edit/${article.id}`}
+            className="block p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
           >
-            Create new
-          </Link>
-        </div>
-
-        <div className="space-y-6">
-          {filteredArticles.map((article) => (
-            <article
-              key={article.id}
-              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-6"
-            >
-              <div className="flex justify-between items-start mb-2">
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-lg font-semibold">{article.title}</h2>
+                <p className="text-gray-600 mt-1">{article.content || 'No content available'}</p>
+                <div className="mt-2 text-sm text-gray-500">
+                  {article.authors
+                    .map((authorId: string) => {
+                      const author = authors.find((a) => a.id === authorId);
+                      return author ? author.name : 'Unknown author';
+                    })
+                    .join(', ')}
+                </div>
+              </div>
+              <div className="text-right">
                 <span
-                  className={`text-sm font-medium ${
+                  className={`px-2 py-1 text-xs font-medium rounded-full ${
                     article.status === STATUS_TYPES.PUBLISHED
-                      ? 'text-green-600'
-                      : article.status === STATUS_TYPES.DRAFT
-                        ? 'text-gray-600'
-                        : article.status === STATUS_TYPES.IN_REVIEW
-                          ? 'text-blue-600'
-                          : 'text-gray-400'
+                      ? 'bg-green-100 text-green-800'
+                      : article.status === STATUS_TYPES.IN_REVIEW
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : article.status === STATUS_TYPES.ARCHIVED
+                          ? 'bg-gray-100 text-gray-800'
+                          : 'bg-blue-100 text-blue-800'
                   }`}
                 >
-                  {statusLabels[article.status]}
+                  {statusLabels[article.status as StatusType]}
                 </span>
-                <span className="text-sm text-gray-500">{article.type}</span>
-              </div>
-
-              <h2 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors">
-                <Link href={`/content/edit/${article.id}`}>{article.title}</Link>
-              </h2>
-
-              <p className="text-gray-600 mb-4">{truncateText(article.content, 100)}</p>
-
-              <div className="flex justify-between items-center text-sm text-gray-500">
-                <span>
-                  {article.authors
-                    .map((author) => authors.find((a) => a.id === author)?.name)
-                    .join(', ')}
-                </span>
-                {article.deadline ? (
-                  <time dateTime={new Date(article.deadline).toISOString()}>
-                    {new Date(article.deadline).toLocaleDateString('da-DK', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false,
-                    })}
-                  </time>
-                ) : (
-                  'Not set'
+                {article.deadline && (
+                  <div className="mt-2 text-sm text-gray-500">
+                    <time dateTime={new Date(article.deadline).toISOString()}>
+                      {new Date(article.deadline).toLocaleDateString('da-DK', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                      })}
+                    </time>
+                  </div>
                 )}
               </div>
-            </article>
-          ))}
-        </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </CMSPage>
   );
-}
-
-// Helper function to truncate text
-const truncateText = (text: string, maxLength: number) => {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
 }

@@ -1,45 +1,33 @@
-'use client';
 import AuthorsPicker from '@/app/components/authors-picker';
 import CMSPage from '@/app/components/cms-page';
 import DeadlinePicker from '@/app/components/deadline-picker';
-import { ContentItem, STATUS_TYPES } from '@/app/model/content-item';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { STATUS_TYPES } from '@/app/model/content-item';
+import { createContentItem } from '@/app/server/content-item';
+import { requireUser } from '@/app/server/session';
+import { redirect } from 'next/navigation';
+
+async function createArticle(formData: FormData) {
+  // prettier-ignore
+  'use server';
+  const userId = await requireUser();
+
+  createContentItem({
+    title: formData.get('title') as string,
+    content: formData.get('content') as string,
+    type: 'Article', // We only support this type for now
+    status: formData.get('status') as string,
+    authors: formData.getAll('authors') as string[],
+    deadline: formData.get('deadline') as string,
+    createdBy: userId,
+  });
+  redirect('/content');
+}
 
 export default function NewContent() {
-  const router = useRouter();
-  const [formData, setFormData] = useState<Partial<ContentItem>>({
-    title: '',
-    content: '',
-    type: 'Article',
-    status: STATUS_TYPES.DRAFT,
-    authors: [],
-    deadline: new Date().toISOString(),
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3001/articles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        router.push('/content');
-      }
-    } catch (error) {
-      console.error('Error creating article:', error);
-    }
-  };
-
   return (
     <CMSPage pageTitle="New Article">
       <div className="max-w-2xl mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form action={createArticle} className="space-y-6">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
               Title
@@ -47,8 +35,7 @@ export default function NewContent() {
             <input
               type="text"
               id="title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              name="title"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
             />
@@ -60,8 +47,7 @@ export default function NewContent() {
             </label>
             <textarea
               id="content"
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              name="content"
               rows={6}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
@@ -69,10 +55,7 @@ export default function NewContent() {
           </div>
 
           <div>
-            <AuthorsPicker
-              selectedAuthors={formData.authors || []}
-              onChange={(selectedAuthors) => setFormData({ ...formData, authors: selectedAuthors })}
-            />
+            <AuthorsPicker selectedAuthors={[]} />
           </div>
 
           <div>
@@ -81,13 +64,8 @@ export default function NewContent() {
             </label>
             <select
               id="status"
-              value={formData.status}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  status: e.target.value as (typeof STATUS_TYPES)[keyof typeof STATUS_TYPES],
-                })
-              }
+              name="status"
+              defaultValue={STATUS_TYPES.DRAFT}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               <option value={STATUS_TYPES.DRAFT}>Draft</option>
@@ -98,27 +76,21 @@ export default function NewContent() {
           </div>
 
           <div>
-            <DeadlinePicker
-              value={formData.deadline ? new Date(formData.deadline) : null}
-              onChange={(newDate: Date) =>
-                setFormData({ ...formData, deadline: newDate.toISOString() })
-              }
-            />
+            <DeadlinePicker value={null} />
           </div>
 
           <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={() => router.push('/content')}
+            <a
+              href="/content"
               className="px-4 py-2 text-gray-600 hover:text-gray-800 cursor-pointer"
             >
               Cancel
-            </button>
+            </a>
             <button
               type="submit"
               className="px-4 py-2 bg-emerald-800 text-white rounded-md hover:bg-emerald-600 transition-colors cursor-pointer"
             >
-              Create Content
+              Create Article
             </button>
           </div>
         </form>

@@ -2,13 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Author } from '../model/content-item';
 
-export default function AuthorsPicker({
-  selectedAuthors,
-  onChange,
-}: {
-  selectedAuthors: string[];
-  onChange: (selectedAuthors: string[]) => void;
-}) {
+export default function AuthorsPicker({ selectedAuthors }: { selectedAuthors: string[] }) {
   const [authors, setAuthors] = useState<Author[]>([]);
 
   useEffect(() => {
@@ -26,12 +20,9 @@ export default function AuthorsPicker({
       </label>
       <select
         id="authors"
+        name="authors"
         multiple
-        value={selectedAuthors}
-        onChange={(e) => {
-          const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-          onChange(selectedOptions);
-        }}
+        defaultValue={selectedAuthors}
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
       >
         {authors.map((author) => (
@@ -44,6 +35,7 @@ export default function AuthorsPicker({
     </>
   );
 }
+
 function getAuthors(): Promise<Author[]> {
   return fetch('http://localhost:3001/authors')
     .then((response) => response.json())
