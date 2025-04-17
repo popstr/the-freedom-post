@@ -36,7 +36,17 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
           <Link
             key={article.id}
             href={`/content/edit/${article.id}`}
-            className="block p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
+            className={`block p-4 rounded-lg shadow hover:shadow-md transition-shadow ${
+              article.deadline &&
+              article.status !== STATUS_TYPES.PUBLISHED &&
+              article.status !== STATUS_TYPES.ARCHIVED
+                ? new Date(article.deadline) < new Date()
+                  ? 'bg-red-50 border border-red-200'
+                  : new Date(article.deadline) < new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+                    ? 'bg-yellow-50 border border-yellow-200'
+                    : 'bg-white'
+                : 'bg-white'
+            }`}
           >
             <div className="flex justify-between items-start">
               <div>
