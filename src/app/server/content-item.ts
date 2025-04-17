@@ -4,6 +4,7 @@ import { userIsEditor } from './author';
 import { getCurrentUserId, requireUser } from './session';
 
 export async function getArticles(status: string) {
+  // prettier-ignore
   'use server';
   requireUser();
 
@@ -15,6 +16,8 @@ export async function getArticles(status: string) {
   if (status !== STATUS_TYPES.ALL) {
     params.push(`status=${status}`);
   }
+  // Always sort by deadline, most urgent first
+  params.push(`_sort=deadline&_order=asc`);
 
   let url = `http://localhost:3001/articles`;
   if (params.length > 0) {
