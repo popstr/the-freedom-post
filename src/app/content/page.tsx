@@ -2,7 +2,7 @@ import Link from 'next/link';
 import CMSPage from '../components/cms-page';
 import CreateArticleButton from '../components/create-article-button';
 import StatusSelector from '../components/status-selector';
-import { ContentItem, STATUS_TYPES, statusLabels, StatusType } from '../model/content-item';
+import { Author, ContentItem, STATUS_TYPES, statusLabels, StatusType } from '../model/content-item';
 import { getAuthors } from '../server/author';
 import { getItems } from '../server/content-item';
 
@@ -67,7 +67,7 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
                         <div className="mt-2 text-sm text-gray-500">
                           {item.authors
                             .map((authorId: string) => {
-                              const author = authors.find((a) => a.id === authorId);
+                              const author = authors.find((a: Author) => a.id === authorId);
                               return author ? author.name : 'Unknown author';
                             })
                             .join(', ')}
