@@ -1,16 +1,11 @@
-'use client';
-import { useEffect, useState } from 'react';
+'use server';
 import { Author } from '../model/content-item';
+import { getAuthors } from '../server/author';
 
-export default function AuthorsPicker({ selectedAuthors }: { selectedAuthors: string[] }) {
-  const [authors, setAuthors] = useState<Author[]>([]);
-
-  useEffect(() => {
-    getAuthors().then((data) => setAuthors(data));
-  }, []);
-
+export default async function AuthorsPicker({ selectedAuthors }: { selectedAuthors: string[] }) {
+  const authors = await getAuthors();
   if (authors.length == 0) {
-    return <div>Loading...</div>;
+    return <div>No Authors found...</div>;
   }
 
   return (
@@ -25,7 +20,7 @@ export default function AuthorsPicker({ selectedAuthors }: { selectedAuthors: st
         defaultValue={selectedAuthors}
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
       >
-        {authors.map((author) => (
+        {authors.map((author: Author) => (
           <option key={author.id} value={author.id}>
             {author.name} ({author.email})
           </option>
@@ -34,10 +29,4 @@ export default function AuthorsPicker({ selectedAuthors }: { selectedAuthors: st
       <p className="mt-1 text-sm text-gray-500">Hold Ctrl/Cmd to select multiple authors</p>
     </>
   );
-}
-
-function getAuthors(): Promise<Author[]> {
-  return fetch('http://localhost:3001/authors')
-    .then((response) => response.json())
-    .then((data) => data);
 }
