@@ -1,34 +1,17 @@
 {
-    "articles": [
-        {
-            "id": "1",
-            "type": "Article",
-            "title": "First Article",
-            "content": "Content 1",
-            "authors": [
-                {
-                    "id": "1",
-                    "name": "Author 1",
-                    "email": "author1@example.com"
-                }
-            ],
-            "status": "published",
-            "deadline": "2025-04-17"
-        },
-        {
-            "id": "2",
-            "type": "Article",
-            "title": "Second Article",
-            "content": "Content 2",
-            "authors": [
-                {
-                    "id": "2",
-                    "name": "Author 2",
-                    "email": "author2@example.com"
-                }
-            ],
-            "status": "draft",
-            "deadline": "2025-04-17"
-        }
-    ]
+  "items": [],
+  "authors": [
+    {
+      "id": "1",
+      "name": "Mikael Karlsson",
+      "email": "mmmicke@gmail.com",
+      "role": "editor"
+    },
+    {
+      "id": "2",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "role": "contributor"
+    }
+  ]
 }
