@@ -39,12 +39,12 @@ export default function RootLayout({
               <div className="flex items-center gap-4">
                 <SignedOut>
                   <SignInButton>
-                    <button className="px-4 py-2 text-sm font-medium text-white bg-black hover:bg-gray-700">
+                    <button className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-700 transition-colors">
                       Sign In
                     </button>
                   </SignInButton>
                   <SignUpButton>
-                    <button className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-700 transition-colors">
+                    <button className="px-4 py-2 text-sm font-medium text-white bg-emerald-900 rounded-md hover:bg-gray-700 transition-colors">
                       Sign Up
                     </button>
                   </SignUpButton>
@@ -54,9 +54,7 @@ export default function RootLayout({
                 </SignedIn>
               </div>
             </header>
-            <main className="py-8">
-              {children}
-            </main>
+            <main className="py-8">{children}</main>
           </div>
           <footer className="absolute bottom-0 left-0 right-0 border-t border-gray-200 text-center text-sm text-gray-600 py-6">
             © {new Date().getFullYear()} The Freedom Post
