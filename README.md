@@ -60,7 +60,13 @@ Starting the application
 
 > The following commands are run from the root folder of this project.
 
-First start the api:
+Install the required dependencies (first time only):
+
+```bash
+npm install
+```
+
+Start the api:
 
 ```bash
 npx json-server data/db.json --port 3001
@@ -73,6 +79,8 @@ npm run dev
 ```
 
 Point your web browser to `http://localhost:3000`.
+
+Click the [Sign up](http://localhost:3000/sign-up) button to add an account using Google or Microsoft.
 
 Instead of creating a mock auth, I decided to try out Clerk, which provides very simple but powerful authentication using third party auth providers like Google, Microsoft etc. Clerk also makes sure to protect the server side components from unauthenticated access using its middleware in `src/middleware.ts`.
 
