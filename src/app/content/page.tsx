@@ -7,7 +7,7 @@ import { getAuthors } from '../server/author';
 import { getItems } from '../server/content-item';
 
 export default async function ContentPage({ searchParams }: { searchParams: { status?: string } }) {
-  const { status } = searchParams;
+  const { status } = await searchParams;
   const selectedStatus = status || STATUS_TYPES.ALL;
   const items = await getItems(selectedStatus);
   const authors = await getAuthors();
