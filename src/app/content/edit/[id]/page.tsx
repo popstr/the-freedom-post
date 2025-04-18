@@ -8,6 +8,9 @@ import { redirect } from 'next/navigation';
 export default async function EditContent({ params }: { params: { id: string } }) {
   const { id } = await params;
   const item = await getItem(id);
+  if (!item) {
+    return <div>Item not found</div>;
+  }
 
   return (
     <CMSPage pageTitle="Edit Content">

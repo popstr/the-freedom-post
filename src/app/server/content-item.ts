@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { STATUS_TYPES } from '../model/content-item';
+import { ContentItem, STATUS_TYPES } from '../model/content-item';
 import { userIsEditor } from './author';
 import { getCurrentUserId } from './session';
 
@@ -27,7 +27,7 @@ export async function getItems(status: string) {
   return items;
 }
 
-export async function getItem(id: string) {
+export async function getItem(id: string): Promise<ContentItem | null> {
   'use server';
 
   const params = [];
@@ -41,7 +41,10 @@ export async function getItem(id: string) {
     url += `?${params.join('&')}`;
   }
   const res = await fetch(url);
-  return await res.json();
+  if (res.status !== 200) {
+    return null;
+  }
+  return res.json();
 }
 
 type ContentItemInsert = {
