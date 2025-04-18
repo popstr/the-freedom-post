@@ -29,9 +29,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`min-h-screen bg-white text-black ${geistSans.variable} ${geistMono.variable} antialiased relative`}
+          className={`min-h-screen bg-white text-black ${geistSans.variable} ${geistMono.variable} antialiased flex flex-col`}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
             <header className="flex justify-between items-center py-6 border-b border-gray-200">
               <Link href={`/content`}>
                 <Image src="/logo.png" alt="The Freedom Post" width={220} height={120} />
@@ -56,7 +56,7 @@ export default function RootLayout({
             </header>
             <main className="py-8">{children}</main>
           </div>
-          <footer className="absolute bottom-0 left-0 right-0 border-t border-gray-200 text-center text-sm text-gray-600 py-6">
+          <footer className="border-t border-gray-200 text-center text-sm text-gray-600 py-6">
             © {new Date().getFullYear()} The Freedom Post
           </footer>
         </body>
