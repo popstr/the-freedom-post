@@ -3,13 +3,13 @@ import CMSPage from '@/app/components/cms-page';
 import DeadlinePicker from '@/app/components/deadline-picker';
 import { STATUS_TYPES } from '@/app/model/content-item';
 import { createContentItem } from '@/app/server/content-item';
-import { requireUser } from '@/app/server/session';
+import { getCurrentUserId } from '@/app/server/session';
 import { redirect } from 'next/navigation';
 
 async function createArticle(formData: FormData) {
   // prettier-ignore
   'use server';
-  const userId = await requireUser();
+  const userId = await getCurrentUserId();
 
   createContentItem({
     title: formData.get('title') as string,

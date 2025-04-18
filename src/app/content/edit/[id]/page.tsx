@@ -3,7 +3,6 @@ import CMSPage from '@/app/components/cms-page';
 import DeadlinePicker from '@/app/components/deadline-picker';
 import { STATUS_TYPES } from '@/app/model/content-item';
 import { deleteContentItem, getArticle, updateContentItem } from '@/app/server/content-item';
-import { requireUser } from '@/app/server/session';
 import { redirect } from 'next/navigation';
 
 export default async function EditContent({ params }: { params: { id: string } }) {
@@ -28,7 +27,6 @@ export default async function EditContent({ params }: { params: { id: string } }
           <form
             action={async (formData) => {
               'use server';
-              requireUser();
 
               updateContentItem(id, {
                 title: formData.get('title') as string,

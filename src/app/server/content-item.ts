@@ -6,7 +6,6 @@ import { getCurrentUserId, requireUser } from './session';
 export async function getArticles(status: string) {
   // prettier-ignore
   'use server';
-  requireUser();
 
   const userId = await getCurrentUserId();
   const params = [];
@@ -31,7 +30,6 @@ export async function getArticles(status: string) {
 
 export async function getArticle(id: string) {
   'use server';
-  const userId = await requireUser();
 
   const params = [];
   if (!(await userIsEditor())) {
@@ -79,7 +77,6 @@ type ContentItemUpdate = {
 
 export async function updateContentItem(id: string, data: ContentItemUpdate) {
   'use server';
-  requireUser();
 
   await fetch(`http://localhost:3001/articles/${id}`, {
     method: 'PUT',
@@ -92,7 +89,6 @@ export async function updateContentItem(id: string, data: ContentItemUpdate) {
 
 export async function deleteContentItem(id: string) {
   'use server';
-  requireUser();
 
   await fetch(`http://localhost:3001/articles/${id}`, {
     method: 'DELETE',
