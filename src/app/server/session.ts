@@ -6,7 +6,10 @@ export async function getCurrentUser() {
   return user;
 }
 
-export async function getCurrentUserId() {
+export async function getCurrentUserId(): Promise<string> {
   const user = await currentUser();
-  return user?.id;
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return user.id;
 }
