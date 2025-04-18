@@ -62,7 +62,7 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
                       <div>
                         <h2 className="text-lg font-semibold">{item.title}</h2>
                         <p className="text-gray-600 mt-1">
-                          {item.content || 'No content available'}
+                          {truncateText(item.content, 120) || 'No content available'}
                         </p>
                         <div className="mt-2 text-sm text-gray-500">
                           {item.authors
@@ -116,3 +116,8 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
     </CMSPage>
   );
 }
+
+const truncateText = (text: string, maxLength: number) => {
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + '...';
+};
