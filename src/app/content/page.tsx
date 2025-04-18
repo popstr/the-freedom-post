@@ -3,17 +3,17 @@ import CMSPage from '../components/cms-page';
 import StatusSelector from '../components/status-selector';
 import { ContentItem, STATUS_TYPES, statusLabels, StatusType } from '../model/content-item';
 import { getAuthors } from '../server/author';
-import { getArticles } from '../server/content-item';
+import { getItems } from '../server/content-item';
 
 export default async function ContentPage({ searchParams }: { searchParams: { status?: string } }) {
   const { status } = await searchParams;
   const selectedStatus = status || STATUS_TYPES.ALL;
-  const articles = await getArticles(selectedStatus);
+  const items = await getItems(selectedStatus);
   const authors = await getAuthors();
 
-  const filteredArticles = articles.filter((article: ContentItem) => {
+  const filteredItems = items.filter((item: ContentItem) => {
     if (selectedStatus === STATUS_TYPES.ALL) return true;
-    return article.status === selectedStatus;
+    return item.status === selectedStatus;
   });
 
   return (
@@ -32,17 +32,17 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
       </div>
 
       <div className="grid gap-4">
-        {filteredArticles.map((article: ContentItem) => (
+        {filteredItems.map((item: ContentItem) => (
           <Link
-            key={article.id}
-            href={`/content/edit/${article.id}`}
+            key={item.id}
+            href={`/content/edit/${item.id}`}
             className={`block p-4 rounded-lg shadow hover:shadow-md transition-shadow ${
-              article.deadline &&
-              article.status !== STATUS_TYPES.PUBLISHED &&
-              article.status !== STATUS_TYPES.ARCHIVED
-                ? new Date(article.deadline) < new Date()
+              item.deadline &&
+              item.status !== STATUS_TYPES.PUBLISHED &&
+              item.status !== STATUS_TYPES.ARCHIVED
+                ? new Date(item.deadline) < new Date()
                   ? 'bg-red-50 border border-red-200'
-                  : new Date(article.deadline) < new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+                  : new Date(item.deadline) < new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
                     ? 'bg-yellow-50 border border-yellow-200'
                     : 'bg-white'
                 : 'bg-white'
@@ -50,10 +50,10 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
           >
             <div className="flex justify-between items-start">
               <div>
-                <h2 className="text-lg font-semibold">{article.title}</h2>
-                <p className="text-gray-600 mt-1">{article.content || 'No content available'}</p>
+                <h2 className="text-lg font-semibold">{item.title}</h2>
+                <p className="text-gray-600 mt-1">{item.content || 'No content available'}</p>
                 <div className="mt-2 text-sm text-gray-500">
-                  {article.authors
+                  {item.authors
                     .map((authorId: string) => {
                       const author = authors.find((a) => a.id === authorId);
                       return author ? author.name : 'Unknown author';
@@ -64,24 +64,24 @@ export default async function ContentPage({ searchParams }: { searchParams: { st
               <div className="text-right">
                 <span
                   className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    article.status === STATUS_TYPES.PUBLISHED
+                    item.status === STATUS_TYPES.PUBLISHED
                       ? 'bg-green-50 text-green-600'
-                      : article.status === STATUS_TYPES.IN_REVIEW
+                      : item.status === STATUS_TYPES.IN_REVIEW
                         ? 'bg-yellow-100 text-yellow-800'
-                        : article.status === STATUS_TYPES.ARCHIVED
+                        : item.status === STATUS_TYPES.ARCHIVED
                           ? 'bg-gray-100 text-gray-800'
                           : 'bg-blue-100 text-blue-800'
                   }`}
                 >
-                  {statusLabels[article.status as StatusType]}
+                  {statusLabels[item.status as StatusType]}
                 </span>
-                {article.deadline &&
-                  article.status !== STATUS_TYPES.PUBLISHED &&
-                  article.status !== STATUS_TYPES.ARCHIVED && (
+                {item.deadline &&
+                  item.status !== STATUS_TYPES.PUBLISHED &&
+                  item.status !== STATUS_TYPES.ARCHIVED && (
                     <div className="mt-2 text-sm text-gray-500">
                       <span className="font-medium">Deadline: </span>
-                      <time dateTime={new Date(article.deadline).toISOString()}>
-                        {new Date(article.deadline).toLocaleDateString('da-DK', {
+                      <time dateTime={new Date(item.deadline).toISOString()}>
+                        {new Date(item.deadline).toLocaleDateString('da-DK', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',

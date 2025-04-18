@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 import { STATUS_TYPES } from '../model/content-item';
 import { userIsEditor } from './author';
-import { getCurrentUserId, requireUser } from './session';
+import { getCurrentUserId } from './session';
 
-export async function getArticles(status: string) {
+export async function getItems(status: string) {
   // prettier-ignore
   'use server';
 
@@ -18,25 +18,25 @@ export async function getArticles(status: string) {
   // Always sort by deadline, most urgent first
   params.push(`_sort=deadline&_order=asc`);
 
-  let url = `http://localhost:3001/articles`;
+  let url = `http://localhost:3001/items`;
   if (params.length > 0) {
     url += `?${params.join('&')}`;
   }
-  console.log('url', url);
   const res = await fetch(url);
-  const articles = await res.json();
-  return articles;
+  const items = await res.json();
+  return items;
 }
 
-export async function getArticle(id: string) {
+export async function getItem(id: string) {
   'use server';
 
   const params = [];
   if (!(await userIsEditor())) {
+    const userId = await getCurrentUserId();
     params.push(`createdBy=${userId}`);
   }
 
-  let url = `http://localhost:3001/articles/${id}`;
+  let url = `http://localhost:3001/items/${id}`;
   if (params.length > 0) {
     url += `?${params.join('&')}`;
   }
@@ -56,9 +56,8 @@ type ContentItemInsert = {
 
 export async function createContentItem(data: ContentItemInsert) {
   'use server';
-  requireUser();
 
-  await fetch(`http://localhost:3001/articles`, {
+  await fetch(`http://localhost:3001/items`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -78,7 +77,7 @@ type ContentItemUpdate = {
 export async function updateContentItem(id: string, data: ContentItemUpdate) {
   'use server';
 
-  await fetch(`http://localhost:3001/articles/${id}`, {
+  await fetch(`http://localhost:3001/items/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -90,7 +89,7 @@ export async function updateContentItem(id: string, data: ContentItemUpdate) {
 export async function deleteContentItem(id: string) {
   'use server';
 
-  await fetch(`http://localhost:3001/articles/${id}`, {
+  await fetch(`http://localhost:3001/items/${id}`, {
     method: 'DELETE',
   });
   redirect('/content');

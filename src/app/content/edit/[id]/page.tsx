@@ -2,12 +2,12 @@ import AuthorsPicker from '@/app/components/authors-picker';
 import CMSPage from '@/app/components/cms-page';
 import DeadlinePicker from '@/app/components/deadline-picker';
 import { STATUS_TYPES } from '@/app/model/content-item';
-import { deleteContentItem, getArticle, updateContentItem } from '@/app/server/content-item';
+import { deleteContentItem, getItem, updateContentItem } from '@/app/server/content-item';
 import { redirect } from 'next/navigation';
 
 export default async function EditContent({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const article = await getArticle(id);
+  const item = await getItem(id);
 
   return (
     <CMSPage pageTitle="Edit Content">
@@ -47,7 +47,7 @@ export default async function EditContent({ params }: { params: { id: string } }
                 type="text"
                 id="title"
                 name="title"
-                defaultValue={article.title}
+                defaultValue={item.title}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               />
@@ -60,7 +60,7 @@ export default async function EditContent({ params }: { params: { id: string } }
               <textarea
                 id="content"
                 name="content"
-                defaultValue={article.content}
+                defaultValue={item.content}
                 rows={6}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
@@ -68,7 +68,7 @@ export default async function EditContent({ params }: { params: { id: string } }
             </div>
 
             <div>
-              <AuthorsPicker selectedAuthors={article.authors} />
+              <AuthorsPicker selectedAuthors={item.authors} />
             </div>
 
             <div>
@@ -78,7 +78,7 @@ export default async function EditContent({ params }: { params: { id: string } }
               <select
                 id="status"
                 name="status"
-                defaultValue={article.status}
+                defaultValue={item.status}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value={STATUS_TYPES.DRAFT}>Draft</option>
@@ -89,7 +89,7 @@ export default async function EditContent({ params }: { params: { id: string } }
             </div>
 
             <div>
-              <DeadlinePicker value={article.deadline ? new Date(article.deadline) : null} />
+              <DeadlinePicker value={item.deadline ? new Date(item.deadline) : null} />
             </div>
 
             <div className="flex justify-end space-x-4">
