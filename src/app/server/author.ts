@@ -22,7 +22,5 @@ export const userIsEditor = async (): Promise<boolean> => {
     return false;
   }
   const author = await getAuthorByEmail(email);
-  console.log('author', author);
-  console.log('author?.role', author?.role);
   return author?.role === 'editor';
 };
